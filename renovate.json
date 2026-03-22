@@ -1,0 +1,11 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["helpers:pinGitHubActionDigestsToSemver"],
+  "schedule": [
+    "at any time"
+  ],
+  "rangeStrategy": "auto",
+  "automerge": true,
+  "automergeType": "pr",
+  "internalChecksAsSuccess": true
+}

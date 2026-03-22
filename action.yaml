@@ -1,0 +1,50 @@
+name: "napi-build-action"
+author: "puniyu"
+description: "设置Rust作"
+
+inputs:
+  esm:
+    required: false
+    type: boolean
+    default: false
+  target:
+    required: true
+    type: string
+    description: target triple to install
+  cwdDir:
+    required: true
+    type: string
+    description: working directory
+  outputDir:
+    required: false
+    type: string
+    default: "dist"
+    description: output directory
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Rust
+      uses: puniyu/setup-rust@main
+      with:
+        target: ${{ inputs.target }}
+        save-cache: true
+
+    - name: Setup Nodejs
+      uses: puniyu/setup-node@main
+      with:
+        node-version: lts/*
+        pnpm-version: latest
+
+    - name: Setup Napi CLi
+      shell: bash
+      run: pnpm i -g napi-cli
+
+    - name: Build
+      shell: bash
+      run: |
+        if [ "${{ inputs.esm }}" = "true" ]; then
+          napi build --platform --release --esm --cwd ${{ inputs.cwdDir }} --outputDir ${{ inputs.outputDir }}
+        else
+          napi build --platform --release --cwd ${{ inputs.cwdDir }} --outputDir ${{ inputs.outputDir }}
+        fi
