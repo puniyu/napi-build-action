@@ -1,6 +1,6 @@
 name: "napi-build-action"
 author: "puniyu"
-description: "设置Rust作"
+description: "构建node-addon"
 
 inputs:
   esm:
@@ -21,6 +21,11 @@ inputs:
     default: "dist"
     description: output directory
 
+outputs:
+  output-path:
+    description: "build .node file path"
+    value: ${{ steps.output.outputs.output-path }}
+
 runs:
   using: "composite"
   steps:
@@ -29,6 +34,7 @@ runs:
       with:
         target: ${{ inputs.target }}
         save-cache: true
+        prefix-key: "napi"
 
     - name: Setup Nodejs
       uses: puniyu/setup-node@main
@@ -38,13 +44,28 @@ runs:
 
     - name: Setup Napi CLi
       shell: bash
-      run: pnpm i -g napi-cli
+      run: pnpm i -g @napi-rs/cli
 
     - name: Build
       shell: bash
       run: |
         if [ "${{ inputs.esm }}" = "true" ]; then
-          napi build --platform --release --esm --cwd ${{ inputs.cwdDir }} --outputDir ${{ inputs.outputDir }}
+          napi build --platform --release --esm --cwd ${{ inputs.cwdDir }} --output-dir ${{ inputs.outputDir }}
         else
-          napi build --platform --release --cwd ${{ inputs.cwdDir }} --outputDir ${{ inputs.outputDir }}
+          napi build --platform --release --cwd ${{ inputs.cwdDir }} --output-dir ${{ inputs.outputDir }}
         fi
+
+    - name: Output
+      shell: bash
+      id: output
+      run: |
+        ARTIFACT_FILE=$(find ${{ inputs.cwdDir }}/${{ inputs.outputDir }} -type f \( -name "*.node" -o -name "*.wasm" \) | head -1)
+        if [ -n "$ARTIFACT_FILE" ]; then
+          echo "output-path=$ARTIFACT_FILE" >> $GITHUB_OUTPUT
+          echo "Found artifact: $ARTIFACT_FILE"
+        else
+          echo "❌ No .node or .wasm file found in ${{ inputs.cwdDir }}/${{ inputs.outputDir }}"
+          exit 1
+        fi
+  
+
