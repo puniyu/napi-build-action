@@ -20,6 +20,11 @@ inputs:
     type: string
     default: "dist"
     description: output directory
+  cache:
+    required: false
+    type: boolean
+    default: false
+    description: "Whether to enable build caching"
 
 outputs:
   output-path:
@@ -33,7 +38,7 @@ runs:
       uses: puniyu/setup-rust@main
       with:
         target: ${{ inputs.target }}
-        save-cache: true
+        save-cache: ${{ inputs.cache }}
         prefix-key: "napi"
 
     - name: Setup Nodejs
@@ -41,6 +46,7 @@ runs:
       with:
         node-version: lts/*
         pnpm-version: latest
+        cache: ${{ inputs.cache }}
 
     - name: Setup Napi CLi
       shell: bash
