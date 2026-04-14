@@ -38,7 +38,7 @@ runs:
       uses: puniyu/setup-rust@main
       with:
         target: ${{ inputs.target }}
-        save-cache: ${{ inputs.cache }}
+        cache: ${{ inputs.cache }}
         prefix-key: "napi"
 
     - name: Setup Nodejs
