@@ -35,14 +35,14 @@ runs:
   using: "composite"
   steps:
     - name: Setup Rust
-      uses: puniyu/setup-rust@main
+      uses: puniyu/setup-rust@36710db2069c5dbcd0bc48cf725ad62ece8bff77 # main
       with:
         target: ${{ inputs.target }}
         cache: ${{ inputs.cache }}
         prefix-key: "napi"
 
     - name: Setup Nodejs
-      uses: puniyu/setup-node@main
+      uses: puniyu/setup-node@322dd6503e97fb43fea2c20882fdd9f93e151019 # main
       with:
         node-version: lts/*
         pnpm-version: latest
