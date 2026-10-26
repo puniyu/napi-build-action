@@ -35,7 +35,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup Rust
-      uses: puniyu/setup-rust@b2e092ceb2845937215b32578f31c9fb2a51cf4a # main
+      uses: puniyu/setup-rust@0a5328c079996ee82595f16383867ac55e698bd4 # main
       with:
         target: ${{ inputs.target }}
         cache: ${{ inputs.cache }}
