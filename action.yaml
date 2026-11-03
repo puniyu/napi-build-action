@@ -42,7 +42,7 @@ runs:
         prefix-key: "napi"
 
     - name: Setup Nodejs
-      uses: puniyu/setup-node@342dbffc32e1f50f8d9660e64bb23102db87570c # main
+      uses: puniyu/setup-node@82edbf1086f651d2110bf167717fcac63d535563 # main
       with:
         node-version: lts/*
         pnpm-version: latest
